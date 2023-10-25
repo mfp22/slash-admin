@@ -12,10 +12,14 @@ import 'virtual:svg-icons-register';
 import App from '@/App';
 
 import { worker } from './_mock';
+import { stateAdapt } from './state-adapt';
+
 // i18n
 import './locales/i18n';
 // tailwind css
 import './theme/index.css';
+
+import { AdaptContext } from '@state-adapt/react';
 
 const charAt = `
     ███████╗██╗      █████╗ ███████╗██╗  ██╗ 
@@ -44,14 +48,16 @@ const queryClient = new QueryClient({
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
-  <HelmetProvider>
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <Suspense>
-        <App />
-      </Suspense>
-    </QueryClientProvider>
-  </HelmetProvider>,
+  <AdaptContext.Provider value={stateAdapt as any}>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <Suspense>
+          <App />
+        </Suspense>
+      </QueryClientProvider>
+    </HelmetProvider>
+  </AdaptContext.Provider>,
 );
 
 // 🥵 start service worker mock in development mode

@@ -38,6 +38,15 @@ dependencies:
   '@iconify/react':
     specifier: ^4.1.1
     version: 4.1.1(react@18.2.0)
+  '@state-adapt/core':
+    specifier: ^2.0.3
+    version: 2.0.3
+  '@state-adapt/react':
+    specifier: ^2.0.3
+    version: 2.0.3(@state-adapt/rxjs@2.0.3)(react@18.2.0)
+  '@state-adapt/rxjs':
+    specifier: ^2.0.3
+    version: 2.0.3(@state-adapt/core@2.0.3)(rxjs@7.8.1)
   '@tanstack/react-query':
     specifier: ^4.29.14
     version: 4.36.1(react-dom@18.2.0)(react@18.2.0)
@@ -128,6 +137,9 @@ dependencies:
   reset-css:
     specifier: ^5.0.2
     version: 5.0.2
+  rxjs:
+    specifier: ^7.8.1
+    version: 7.8.1
   screenfull:
     specifier: ^6.0.2
     version: 6.0.2
@@ -143,9 +155,6 @@ dependencies:
   vite-tsconfig-paths:
     specifier: ^4.2.1
     version: 4.2.1(typescript@5.2.2)(vite@4.4.11)
-  zustand:
-    specifier: ^4.3.8
-    version: 4.4.3(@types/react@18.2.28)(react@18.2.0)
 
 devDependencies:
   '@commitlint/cli':
@@ -2467,6 +2476,34 @@ packages:
   /@remix-run/router@1.9.0:
     resolution: {integrity: sha512-bV63itrKBC0zdT27qYm6SDZHlkXwFL1xMBuhkn+X7l0+IIhNaH5wuuvZKp6eKhCD4KFhujhfhCT1YxXW6esUIA==}
     engines: {node: '>=14.0.0'}
+    dev: false
+
+  /@state-adapt/core@2.0.3:
+    resolution: {integrity: sha512-a8o6glc4I6uS8eiH/95Rb73oPFV6bOWy8nP+q+xG86Fg1kDfyGi8TUhrvAJUBr/oHrkjEKsfsU0hQGEOmkzV4Q==}
+    dependencies:
+      tslib: 2.6.2
+    dev: false
+
+  /@state-adapt/react@2.0.3(@state-adapt/rxjs@2.0.3)(react@18.2.0):
+    resolution: {integrity: sha512-ZL/rR9OHQy1PruiY6hvQYeqP6/8kn30XjfqWlvNlYkYMz+GtgF8O44FIWXCiYvKmay4FmwMgkQMjCv+M8Q1tBQ==}
+    peerDependencies:
+      '@state-adapt/rxjs': 2.0.3
+      react: ^17.0.1 || ^18.0.0
+    dependencies:
+      '@state-adapt/rxjs': 2.0.3(@state-adapt/core@2.0.3)(rxjs@7.8.1)
+      react: 18.2.0
+      tslib: 2.6.2
+    dev: false
+
+  /@state-adapt/rxjs@2.0.3(@state-adapt/core@2.0.3)(rxjs@7.8.1):
+    resolution: {integrity: sha512-INZQAGzGjeZXTOXPnkp01odwa59guGLhOHidTw+MXuf7iYZjC6c7jFtmRPHAZCswNN+Az90M/OAzQEFOLMdD0g==}
+    peerDependencies:
+      '@state-adapt/core': 2.0.3
+      rxjs: ^6.6.6 || ^7.4.0
+    dependencies:
+      '@state-adapt/core': 2.0.3
+      rxjs: 7.8.1
+      tslib: 2.6.2
     dev: false
 
   /@tanstack/match-sorter-utils@8.8.4:
@@ -9419,7 +9456,6 @@ packages:
     resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
     dependencies:
       tslib: 2.6.2
-    dev: true
 
   /sade@1.8.1:
     resolution: {integrity: sha512-xal3CZX1Xlo/k4ApwCFrHVACi9fBqJ7V+mwhBsuf/1IOKbBy098Fex+Wa/5QMubw09pSZ/u8EY8PWgevJsXp1A==}
@@ -11303,26 +11339,6 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
-
-  /zustand@4.4.3(@types/react@18.2.28)(react@18.2.0):
-    resolution: {integrity: sha512-oRy+X3ZazZvLfmv6viIaQmtLOMeij1noakIsK/Y47PWYhT8glfXzQ4j0YcP5i0P0qI1A4rIB//SGROGyZhx91A==}
-    engines: {node: '>=12.7.0'}
-    peerDependencies:
-      '@types/react': '>=16.8'
-      immer: '>=9.0'
-      react: '>=16.8'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      immer:
-        optional: true
-      react:
-        optional: true
-    dependencies:
-      '@types/react': 18.2.28
-      react: 18.2.0
-      use-sync-external-store: 1.2.0(react@18.2.0)
-    dev: false
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
