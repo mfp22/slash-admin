@@ -15,7 +15,7 @@ import CyanBlur from '@/assets/images/background/cyan-blur.png';
 import RedBlur from '@/assets/images/background/red-blur.png';
 import { varHover } from '@/components/animate/variants/action';
 import { IconButton, SvgIcon } from '@/components/icon';
-import { useSettingActions, useSettings } from '@/store/settingStore';
+import { settingsChange$, useSettings } from '@/store/settingStore';
 import { colorPrimarys } from '@/theme/antd/theme';
 import { useThemeToken } from '@/theme/hooks';
 
@@ -30,31 +30,30 @@ export default function SettingButton() {
 
   const settings = useSettings();
   const { themeMode, themeColorPresets, themeLayout, themeStretch } = settings;
-  const { setSettings } = useSettingActions();
 
   const setThemeMode = (themeMode: ThemeMode) => {
-    setSettings({
+    settingsChange$.next({
       ...settings,
       themeMode,
     });
   };
 
   const setThemeColorPresets = (themeColorPresets: ThemeColorPresets) => {
-    setSettings({
+    settingsChange$.next({
       ...settings,
       themeColorPresets,
     });
   };
 
   const setThemeLayout = (themeLayout: ThemeLayout) => {
-    setSettings({
+    settingsChange$.next({
       ...settings,
       themeLayout,
     });
   };
 
   const setThemeStretch = (themeStretch: boolean) => {
-    setSettings({
+    settingsChange$.next({
       ...settings,
       themeStretch,
     });

@@ -1,56 +1,56 @@
+import { useStore } from '@state-adapt/react';
+import { Source } from '@state-adapt/rxjs';
 import { useMutation } from '@tanstack/react-query';
 import { App } from 'antd';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { create } from 'zustand';
+import { tap } from 'rxjs';
 
 import userService, { SignInReq } from '@/api/services/userService';
+import { adapt } from '@/state-adapt';
 import { getItem, removeItem, setItem } from '@/utils/storage';
 
 import { UserInfo, UserToken } from '#/entity';
 import { StorageEnum } from '#/enum';
 
-type UserStore = {
+type State = {
   userInfo: Partial<UserInfo>;
   userToken: UserToken;
-  // 使用 actions 命名空间来存放所有的 action
-  actions: {
-    setUserInfo: (userInfo: UserInfo) => void;
-    setUserToken: (token: UserToken) => void;
-    clearUserInfoAndToken: () => void;
-  };
 };
-
-const useUserStore = create<UserStore>((set) => ({
+const initialState: State = {
   userInfo: getItem<UserInfo>(StorageEnum.User) || {},
   userToken: getItem<UserToken>(StorageEnum.Token) || {},
-  actions: {
-    setUserInfo: (userInfo) => {
-      set({ userInfo });
-      setItem(StorageEnum.User, userInfo);
-    },
-    setUserToken: (userToken) => {
-      set({ userToken });
-      setItem(StorageEnum.Token, userToken);
-    },
-    clearUserInfoAndToken() {
-      set({ userInfo: {}, userToken: {} });
-      removeItem(StorageEnum.User);
-      removeItem(StorageEnum.Token);
-    },
-  },
-}));
+};
 
-export const useUserInfo = () => useUserStore((state) => state.userInfo);
-export const useUserToken = () => useUserStore((state) => state.userToken);
-export const useUserActions = () => useUserStore((state) => state.actions);
+export const userSuccess$ = new Source<State>('userSuccess$');
+export const userReset$ = new Source<void>('userReset$');
+
+export const userStore = adapt(initialState, {
+  sources: {
+    set: userSuccess$.pipe(
+      tap(({ payload }) => {
+        setItem(StorageEnum.User, payload.userInfo);
+        setItem(StorageEnum.Token, payload.userToken);
+      }),
+    ),
+    reset: userReset$.pipe(
+      tap(() => {
+        removeItem(StorageEnum.User);
+        removeItem(StorageEnum.Token);
+      }),
+    ),
+  },
+});
+userStore.state$.subscribe();
+
+export const useUserInfo = () => useStore(userStore).state.userInfo;
+export const useUserToken = () => useStore(userStore).state.userToken;
 
 export const useSignIn = () => {
   const { t } = useTranslation();
   const navigatge = useNavigate();
   const { notification, message } = App.useApp();
-  const { setUserToken, setUserInfo } = useUserActions();
 
   const signInMutation = useMutation(userService.signin);
 
@@ -58,8 +58,7 @@ export const useSignIn = () => {
     try {
       const res = await signInMutation.mutateAsync(data);
       const { user, accessToken, refreshToken } = res;
-      setUserToken({ accessToken, refreshToken });
-      setUserInfo(user);
+      userSuccess$.next({ userInfo: user, userToken: { accessToken, refreshToken } });
       navigatge('/dashboard', { replace: true });
 
       notification.success({

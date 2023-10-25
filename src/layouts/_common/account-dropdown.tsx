@@ -6,7 +6,7 @@ import { NavLink } from 'react-router-dom';
 
 import { IconButton } from '@/components/icon';
 import { useLoginStateContext } from '@/pages/sys/login/providers/LoginStateProvider';
-import { useUserInfo, useUserActions } from '@/store/userStore';
+import { useUserInfo, userReset$ } from '@/store/userStore';
 import { useThemeToken } from '@/theme/hooks';
 
 /**
@@ -14,7 +14,6 @@ import { useThemeToken } from '@/theme/hooks';
  */
 export default function AccountDropdown() {
   const { username, email, avatar } = useUserInfo();
-  const { clearUserInfoAndToken } = useUserActions();
   const { backToLogin } = useLoginStateContext();
   const { t } = useTranslation();
   const logout = () => {
@@ -24,7 +23,7 @@ export default function AccountDropdown() {
     } catch (error) {
       console.log(error);
     }
-    clearUserInfoAndToken();
+    userReset$.next();
     backToLogin();
   };
   const { colorBgElevated, borderRadiusLG, boxShadowSecondary } = useThemeToken();

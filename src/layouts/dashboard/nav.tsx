@@ -7,7 +7,7 @@ import { useLocation, useMatches, useNavigate } from 'react-router-dom';
 import Logo from '@/components/logo';
 import { useRouteToMenu } from '@/router/hooks';
 import { getMenuRoutes } from '@/router/utils';
-import { useSettingActions, useSettings } from '@/store/settingStore';
+import { settingsChange$, useSettings } from '@/store/settingStore';
 import { useThemeToken } from '@/theme/hooks';
 
 import { ThemeLayout } from '#/enum';
@@ -24,7 +24,6 @@ export default function Nav(props: Props) {
 
   const settings = useSettings();
   const { themeLayout } = settings;
-  const { setSettings } = useSettingActions();
 
   const menuStyle: CSSProperties = {
     background: colorBgElevated,
@@ -85,7 +84,7 @@ export default function Nav(props: Props) {
   };
 
   const setThemeLayout = (themeLayout: ThemeLayout) => {
-    setSettings({
+    settingsChange$.next({
       ...settings,
       themeLayout,
     });
